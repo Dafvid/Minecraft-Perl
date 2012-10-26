@@ -183,7 +183,7 @@ sub get_chunk_count{
 	return $chunk_count;
 }
 
-# Reads all chunks in a Region. Faster than fetching them one by one.
+# Reads all chunks in a Region. Faster than fetching them one by one (if you want them all that is).
 sub get_chunk_arr {
 	my $self = shift;
 	my $timestamp_filter = shift; #array of 1024 timestamps, value of 0 = null, if timestamp matches don't load chunk
@@ -201,7 +201,6 @@ sub get_chunk_arr {
 	read($FH, $timestamp_data, 4096);
 	
     my @chunks = ();
-
     for my $i (0..1023) {
         # TODO: cleaner way of doing this with pack?
         my $bit_string = '0b0' . unpack('B*', substr($location_data, 0, 3, ''));
@@ -216,7 +215,7 @@ sub get_chunk_arr {
 		
 		my $chunk_data;
         seek($FH, $data_offset*4096, 0);
-        read($FH, $chunk_data, $length*4096) or die "FOO";
+        read($FH, $chunk_data, $length*4096) or die "Can't read chunk data";
 
         my $chunk_length = unpack('l>', substr($chunk_data, 0, 4, ''));
         my $compression_type = unpack('W', substr($chunk_data, 0, 1, ''));
@@ -233,10 +232,10 @@ sub get_chunk_arr {
 
         # decompress
         my $nbt_data = Minecraft::NBT->parse_data({data => \$decompressed_data, is_named => 1});
-        my $chunk = Minecraft::Map::Chunk->new({nbt_data => $nbt_data});
+		my $chunk = Minecraft::Map::Chunk->new({nbt_data => $nbt_data});
 		$chunk->timestamp($timestamp);
         push (@chunks,$chunk);
-    }
+    }	
 	return @chunks;
 	close $FH;
 }
