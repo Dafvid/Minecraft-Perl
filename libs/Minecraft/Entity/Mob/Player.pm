@@ -72,11 +72,11 @@ has 'dimension' => (
     isa => 'Int',
     default => sub { 
             my $self = shift;
-            return $self->level_nbt_data->get_child_by_name('Dimension')->payload;
+            return $self->nbt_data->get_child_by_name('Dimension')->payload;
         },
     trigger => sub {
             my ($self, $new_val, $old_val) = @_;
-            $self->level_nbt_data->get_child_by_name('Dimension')->payload($new_val);
+            $self->nbt_data->get_child_by_name('Dimension')->payload($new_val);
         },
     lazy => 1,
 );
@@ -85,6 +85,38 @@ has 'name' => (
     is => 'rw',
     isa => 'Str',
 );
+
+has 'spawnX' => (
+    is => 'rw',
+    isa => 'Int',
+    default => sub { 
+            my $self = shift;
+            return $self->nbt_data->get_child_by_name('SpawnX')->payload;
+        },
+	lazy => 1,
+);
+
+has 'spawnY' => (
+    is => 'rw',
+    isa => 'Int',
+    default => sub { 
+            my $self = shift;
+            return $self->nbt_data->get_child_by_name('SpawnY')->payload;
+        },
+	lazy => 1,
+);
+
+
+has 'spawnZ' => (
+    is => 'rw',
+    isa => 'Int',
+    default => sub { 
+            my $self = shift;
+            return $self->nbt_data->get_child_by_name('SpawnZ')->payload;
+        },
+	lazy => 1,
+);
+
 # checks slots and adds item appropriately, 
 #   with no slot specified, adds to first empty slot if any
 sub add_item {
