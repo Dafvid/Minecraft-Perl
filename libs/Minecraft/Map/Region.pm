@@ -1,6 +1,7 @@
 package Minecraft::Map::Region;
 
 use Mouse;
+use File::Slurp;
 
 use Minecraft::NBT;
 use Minecraft::Map::Chunk;
@@ -191,6 +192,8 @@ sub get_chunk_arr {
 	my $FH;
 	open ($FH, "<", $self->full_path) or die "Could not open " . $self->full_path;
 	binmode $FH;
+	
+	# $FH = read_file( $self->full_path, binmode => ':raw' ) or die "Could not open " . $self->full_path;;
 	
 	seek($FH, 0, 0);
     my $location_data;
