@@ -148,6 +148,8 @@ Readonly my $ALL_ITEMS => {
 	141 => 'carrots',
 	142 => 'potatoes',
 	143 => 'wooden button',
+	144 => 'head',
+	145 => 'anvil',
 
     256 => 'iron spade',
     257 => 'iron pickaxe',
@@ -290,6 +292,10 @@ Readonly my $ALL_ITEMS => {
 	394 => 'poisonous potato',
 	395 => 'map',
 	396 => 'golden carrot',
+	397 => 'head',
+	398 => 'carrot on a stick',
+	399 => 'nether star',
+	400 => 'pumkin pie',
 	2256 => '13 disc',
     2257 => 'cat disc',
 	2258 => 'blocks disc',
@@ -606,7 +612,7 @@ sub get_item_name {
         $id = shift;
     }
 	my $return = $ALL_ITEMS->{$id};
-	if(!$return){$return="<unknown($id)>";}
+	if(!$return){$return="unknown($id)";}
     return $return;
 }
 
@@ -616,7 +622,7 @@ sub get_profession {
         $id = shift;
     }
 	my $return = $PROFESSIONS->[$id];
-	if(!$return){$return="<unknown profession($id)>";}
+	if(!$return){$return="unknown profession($id)";}
     return $return;
 }
 
