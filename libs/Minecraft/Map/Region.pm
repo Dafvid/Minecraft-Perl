@@ -1,6 +1,7 @@
 package Minecraft::Map::Region;
 
 use Mouse;
+use File::Slurp;
 
 use Minecraft::NBT;
 use Minecraft::Map::Chunk;
@@ -192,6 +193,8 @@ sub get_chunk_arr {
 	open ($FH, "<", $self->full_path) or die "Could not open " . $self->full_path;
 	binmode $FH;
 	
+	# $FH = read_file( $self->full_path, binmode => ':raw' ) or die "Could not open " . $self->full_path;;
+	
 	seek($FH, 0, 0);
     my $location_data;
 	read($FH, $location_data, 4096);
@@ -204,7 +207,6 @@ sub get_chunk_arr {
 
     for my $i (0..1023) {
         # TODO: cleaner way of doing this with pack?
-		# print "Reading chunk $i \r";
         my $bit_string = '0b0' . unpack('B*', substr($location_data, 0, 3, ''));
         my $data_offset;
         eval "\$data_offset = $bit_string";

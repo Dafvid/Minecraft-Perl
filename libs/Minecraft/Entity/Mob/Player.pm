@@ -1,5 +1,7 @@
 package Minecraft::Entity::Mob::Player;
 
+use Minecraft::NBT;
+
 use Mouse;
 extends 'Minecraft::Entity::Mob';
 
@@ -45,15 +47,16 @@ has 'inventory' => (
     lazy => 1,
 );
 
-has 'score' => (
+has 'xp_total' => (
     is => 'rw',
     isa => 'Maybe[Int]',
     default => sub {
             my $self = shift;
             if (my $data = $self->nbt_data) {
-                my $score_nbt = $data->get_child_by_name('Score');
-                return $score_nbt->payload if $score_nbt;
+                my $xptotal_nbt = $data->get_child_by_name('XpTotal');
+                return $xptotal_nbt->payload if $xptotal_nbt;
             }
+			return undef;
         },
     trigger => sub {
             my ($self, $new_val, $old_val) = @_;
@@ -69,13 +72,49 @@ has 'dimension' => (
     isa => 'Int',
     default => sub { 
             my $self = shift;
-            return $self->level_nbt_data->get_child_by_name('Dimension')->payload;
+            return $self->nbt_data->get_child_by_name('Dimension')->payload;
         },
     trigger => sub {
             my ($self, $new_val, $old_val) = @_;
-            $self->level_nbt_data->get_child_by_name('Dimension')->payload($new_val);
+            $self->nbt_data->get_child_by_name('Dimension')->payload($new_val);
         },
     lazy => 1,
+);
+
+has 'name' => (
+    is => 'rw',
+    isa => 'Str',
+);
+
+has 'spawnX' => (
+    is => 'rw',
+    isa => 'Int',
+    default => sub { 
+            my $self = shift;
+            return $self->nbt_data->get_child_by_name('SpawnX')->payload;
+        },
+	lazy => 1,
+);
+
+has 'spawnY' => (
+    is => 'rw',
+    isa => 'Int',
+    default => sub { 
+            my $self = shift;
+            return $self->nbt_data->get_child_by_name('SpawnY')->payload;
+        },
+	lazy => 1,
+);
+
+
+has 'spawnZ' => (
+    is => 'rw',
+    isa => 'Int',
+    default => sub { 
+            my $self = shift;
+            return $self->nbt_data->get_child_by_name('SpawnZ')->payload;
+        },
+	lazy => 1,
 );
 
 # checks slots and adds item appropriately, 

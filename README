@@ -1,3 +1,5 @@
+Compatible with Minecraft version 1.4.2
+
 This is a collection of perl libraries that can be used to read, write
 and manipulate data files from the game Minecraft (see http://minecraft.net).
 
@@ -29,5 +31,5 @@ kevin@bosak.net.
 
 ==
 
-Added Anvil support.
+Added Anvil support. Updated data values.
 -David (david@dafcorp.net)
