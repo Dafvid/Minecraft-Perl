@@ -128,6 +128,27 @@ has 'height_map' => (
     lazy => 1,
 );
 
+has 'biomes' => (
+    is => 'rw',
+    isa => 'ArrayRef[Str]',
+    default => sub { 
+            my $self = shift;
+            if (my $chunk_data = $self->nbt_data) {
+                my $block_data = $chunk_data->get_child_by_name('Level')->get_child_by_name('Biomes')->payload;
+                my @blocks = unpack('C*', $block_data);
+                return \@blocks;
+            }
+        },
+    trigger => sub {
+            my ($self, $new_val, $old_val) = @_;
+            if (my $chunk_data = $self->nbt_data) {
+                my $block_data = pack('C*', @$new_val);
+	            $chunk_data->get_child_by_name('Level')->get_child_by_name('Biomes')->payload($block_data);
+            }
+        },
+    lazy => 1,
+);
+
 has 'entities' => (
     is => 'rw',
     isa => 'Maybe[ArrayRef]',
