@@ -2,6 +2,7 @@ package Minecraft::Map::Region;
 
 use Mouse;
 use File::Slurp;
+# use IO::Scalar;
 
 use Minecraft::NBT;
 use Minecraft::Map::Chunk;
@@ -189,11 +190,12 @@ sub get_chunk_arr {
 	my $self = shift;
 	my $timestamp_filter = shift; #array of 1024 timestamps, value of 0 = null, if timestamp matches don't load chunk
 
+	# my $region_file = read_file( $self->full_path, binmode => ':raw' ) or die "Could not open " . $self->full_path;;
+	
 	my $FH;
 	open ($FH, "<", $self->full_path) or die "Could not open " . $self->full_path;
+	# open ($FH, "<", \$region_file) or die "Could not open " . $self->full_path;
 	binmode $FH;
-	
-	# $FH = read_file( $self->full_path, binmode => ':raw' ) or die "Could not open " . $self->full_path;;
 	
 	seek($FH, 0, 0);
     my $location_data;

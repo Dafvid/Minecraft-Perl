@@ -38,35 +38,33 @@ require Minecraft::NBT::List;
 require Minecraft::NBT::Compound;
 require Minecraft::NBT::IntArray;
 
-Readonly my %TYPES => (
-     0 => 'TAG_END',
-     1 => 'TAG_BYTE',
-     2 => 'TAG_SHORT',
-     3 => 'TAG_INT',
-     4 => 'TAG_LONG',
-     5 => 'TAG_FLOAT',
-     6 => 'TAG_DOUBLE',
-     7 => 'TAG_BYTE_ARRAY',
-     8 => 'TAG_STRING',
-     9 => 'TAG_LIST',
-    10 => 'TAG_COMPOUND',
-	11 => 'TAG_INT_ARRAY',
+my $TAG_END = 0;
+my $TAG_BYTE = 1;
+my $TAG_SHORT = 2;
+my $TAG_INT = 3;
+my $TAG_LONG = 4;
+my $TAG_FLOAT = 5;
+my $TAG_DOUBLE = 6;
+my $TAG_BYTE_ARRAY = 7;
+my $TAG_STRING = 8;
+my $TAG_LIST = 9;
+my $TAG_COMPOUND = 10;
+my $TAG_INT_ARRAY = 11;
+
+my @TYPES_ARR = (
+    'TAG_END',
+    'TAG_BYTE',
+    'TAG_SHORT',
+    'TAG_INT',
+    'TAG_LONG',
+    'TAG_FLOAT',
+    'TAG_DOUBLE',
+    'TAG_BYTE_ARRAY',
+    'TAG_STRING',
+    'TAG_LIST',
+    'TAG_COMPOUND',
+	'TAG_INT_ARRAY',
 );
-
-sub types_hash {
-    return %TYPES;
-}
-
-sub string_to_type {
-    my $string = shift;
-    my %types = reverse %TYPES;
-    return $types{$string};
-}
-
-sub type_to_string {
-    my $type = shift;
-    return $TYPES{$type};
-}
 
 sub unzip_data {
     my $data = shift;
@@ -105,18 +103,18 @@ sub parse_data {
 
     
     if (!defined $tag_type) {
-        my $type_data = parse_data({data => $data, tag_type => string_to_type('TAG_BYTE')});
+        my $type_data = parse_data({data => $data, tag_type => $TAG_BYTE});
         $tag_type = $type_data->payload;
     }
 	
     die "NO TAG TYPE" unless defined $tag_type;
 
-    return if type_to_string($tag_type) eq 'TAG_END';
+    return if $tag_type == $TAG_END;
 	
 	my $has_name = $args->{is_named};
     # get the tag's name
     if ($has_name) {
-        my $name_data = parse_data({data => $data, tag_type => string_to_type('TAG_STRING')});
+        my $name_data = parse_data({data => $data, tag_type => $TAG_STRING});
         my $tag_name = $name_data->payload;
         $tag_data->{name} = $tag_name;
 		#print type_to_string($tag_type).":'$tag_name'\n";
@@ -124,26 +122,27 @@ sub parse_data {
 	
     # get the payload
     my $payload;
-    if (type_to_string($tag_type) eq 'TAG_COMPOUND') {
+    # if (type_to_string($tag_type) eq 'TAG_COMPOUND') {
+    if ($tag_type==$TAG_COMPOUND) {
         my @tags = ();
         while (my $subtag = parse_data({data => $data, is_named => 1})) {
             push @tags, $subtag;
         }
         $payload = \@tags;
 
-    } elsif (type_to_string($tag_type) eq 'TAG_BYTE') {
+    } elsif ($tag_type == $TAG_BYTE) {
         my $payload_data = substr($$data, 0, 1, '');
         ($payload) = unpack('c', $payload_data);
 
-    } elsif (type_to_string($tag_type) eq 'TAG_SHORT') {
+    } elsif ($tag_type == $TAG_SHORT) {
         my $payload_data = substr($$data, 0, 2, '');
         ($payload) = unpack('s>', $payload_data);
 
-    } elsif (type_to_string($tag_type) eq'TAG_INT') {
+    } elsif ($tag_type == $TAG_INT) {
         my $payload_data = substr($$data, 0, 4, '');
         ($payload) = unpack('l>', $payload_data);
 
-    } elsif (type_to_string($tag_type) eq 'TAG_LONG') {
+    } elsif ($tag_type == $TAG_LONG) {
         my $byte_string = '';
         my @bytes = ();
         for (1..8) {
@@ -153,42 +152,42 @@ sub parse_data {
         }
         $payload = Math::BigInt->new('0b' . join('', @bytes));
 
-    } elsif (type_to_string($tag_type) eq 'TAG_FLOAT') {
+    } elsif ($tag_type == $TAG_FLOAT) {
         my $payload_data = substr($$data, 0, 4, '');
         ($payload) = unpack('f>', $payload_data);
 
-    } elsif (type_to_string($tag_type) eq 'TAG_DOUBLE') {
+    } elsif ($tag_type == $TAG_DOUBLE) {
         my $payload_data = substr($$data, 0, 8, '');
         ($payload) = unpack('d>', $payload_data);
 
-    } elsif (type_to_string($tag_type) eq 'TAG_BYTE_ARRAY') {
-        my $length_data = parse_data({data => $data, tag_type => string_to_type('TAG_INT')});
+    } elsif ($tag_type == $TAG_BYTE_ARRAY) {
+        my $length_data = parse_data({data => $data, tag_type => $TAG_INT});
         my $length = $length_data->payload;
 
         my $payload_data = substr($$data, 0, $length, '');
         $payload = $payload_data;
 
-    } elsif (type_to_string($tag_type) eq 'TAG_INT_ARRAY') {
-        my $length_data = parse_data({data => $data, tag_type => string_to_type('TAG_INT')});
+    } elsif ($tag_type == $TAG_INT_ARRAY) {
+        my $length_data = parse_data({data => $data, tag_type => $TAG_INT});
         my $length = $length_data->payload;
 		
         my $payload_data = substr($$data, 0, $length * 4, '');
 		($payload) = [unpack("N*",$payload_data)];
 	
-	} elsif (type_to_string($tag_type) eq 'TAG_STRING') {
-        my $length_data = parse_data({data => $data, tag_type => string_to_type('TAG_SHORT')});
+	} elsif ($tag_type == $TAG_STRING) {
+        my $length_data = parse_data({data => $data, tag_type => $TAG_SHORT});
         my $length = $length_data->payload;
 
         my $payload_data = substr($$data, 0, $length, '');
         $payload = $payload_data;
         utf8::upgrade($payload);
 
-    } elsif (type_to_string($tag_type) eq 'TAG_LIST') {
-        my $id_data = parse_data({data => $data, tag_type => string_to_type('TAG_BYTE')});
+    } elsif ($tag_type == $TAG_LIST) {
+        my $id_data = parse_data({data => $data, tag_type => $TAG_BYTE});
         my $id = $id_data->payload;
         $tag_data->{subtag_type} = $id;
 
-        my $length_data = parse_data({data => $data, tag_type => string_to_type('TAG_INT')});
+        my $length_data = parse_data({data => $data, tag_type => $TAG_INT});
         my $length = $length_data->payload;
 
         my @tags = ();
@@ -200,7 +199,8 @@ sub parse_data {
     }
     $tag_data->{payload} = $payload;
 
-    my $type_string = type_to_string($tag_type);
+    # my $type_string = type_to_string($tag_type);
+    my $type_string = $TYPES_ARR[$tag_type];
     my @parts = split('_', $type_string);
     shift @parts;
     $type_string = join('', map {ucfirst(lc($_))} @parts);
