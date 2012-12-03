@@ -248,7 +248,7 @@ sub as_string {
 
     my $string = $leader;
 
-    my ($blah, $type) = split('_', type_to_string($self->tag_type));
+    my ($blah, $type) = split('_', $TYPES_ARR[$self->tag_type]);
     $type = ucfirst(lc($type));
     $string .= "TAG_$type";
 
