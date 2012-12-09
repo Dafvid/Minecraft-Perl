@@ -1,11 +1,12 @@
 package Minecraft::Entity;
 
 use Mouse;
+extends 'Minecraft::NBTClass';
 
-has 'nbt_data' => (
-    is => 'rw',
-    isa => 'Minecraft::NBT::Compound',
-);
+# has 'nbt_data' => (
+    # is => 'rw',
+    # isa => 'Minecraft::NBT::Compound',
+# );
 
 has 'id' => (
     is => 'rw',

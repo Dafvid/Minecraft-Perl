@@ -8,13 +8,13 @@ has 'attack_time' => (
     isa => 'Int',
     default => sub {
             my $self = shift;
-            if (my $entity_data = $self->entity_nbt_data) {
+            if (my $entity_data = $self->nbt_data) {
                 return $entity_data->get_child_by_name('AttackTime')->payload;
             }
         },
     trigger => sub {
             my ($self, $new_val, $old_val) = @_;
-            if (my $entity_data = $self->entity_nbt_data) {
+            if (my $entity_data = $self->nbt_data) {
 	            $entity_data->get_child_by_name('AttackTime')->payload($new_val);
             }
         },
@@ -26,13 +26,13 @@ has 'death_time' => (
     isa => 'Int',
     default => sub {
             my $self = shift;
-            if (my $entity_data = $self->entity_nbt_data) {
+            if (my $entity_data = $self->nbt_data) {
                 return $entity_data->get_child_by_name('DeathTime')->payload;
             }
         },
     trigger => sub {
             my ($self, $new_val, $old_val) = @_;
-            if (my $entity_data = $self->entity_nbt_data) {
+            if (my $entity_data = $self->nbt_data) {
 	            $entity_data->get_child_by_name('DeathTime')->payload($new_val);
             }
         },
@@ -44,13 +44,13 @@ has 'health' => (
     isa => 'Int',
     default => sub {
             my $self = shift;
-            if (my $entity_data = $self->entity_nbt_data) {
+            if (my $entity_data = $self->nbt_data) {
                 return $entity_data->get_child_by_name('Health')->payload;
             }
         },
     trigger => sub {
             my ($self, $new_val, $old_val) = @_;
-            if (my $entity_data = $self->entity_nbt_data) {
+            if (my $entity_data = $self->nbt_data) {
 	            $entity_data->get_child_by_name('Health')->payload($new_val);
             }
         },
@@ -62,13 +62,13 @@ has 'hurt_time' => (
     isa => 'Int',
     default => sub {
             my $self = shift;
-            if (my $entity_data = $self->entity_nbt_data) {
+            if (my $entity_data = $self->nbt_data) {
                 return $entity_data->get_child_by_name('HurtTime')->payload;
             }
         },
     trigger => sub {
             my ($self, $new_val, $old_val) = @_;
-            if (my $entity_data = $self->entity_nbt_data) {
+            if (my $entity_data = $self->nbt_data) {
 	            $entity_data->get_child_by_name('HurtTime')->payload($new_val);
             }
         },
@@ -80,13 +80,13 @@ has 'saddle' => ( # for pigs
     isa => 'Maybe[Bool]',
     default => sub {
             my $self = shift;
-            if (my $entity_data = $self->entity_nbt_data) {
+            if (my $entity_data = $self->nbt_data) {
                 return $entity_data->get_child_by_name('Saddle')->payload;
             }
         },
     trigger => sub {
             my ($self, $new_val, $old_val) = @_;
-            if (my $entity_data = $self->entity_nbt_data) {
+            if (my $entity_data = $self->nbt_data) {
 	            $entity_data->get_child_by_name('Saddle')->payload($new_val);
             }
         },
@@ -98,13 +98,13 @@ has 'sheared' => ( # for sheep
     isa => 'Maybe[Bool]',
     default => sub {
             my $self = shift;
-            if (my $entity_data = $self->entity_nbt_data) {
+            if (my $entity_data = $self->nbt_data) {
                 return $entity_data->get_child_by_name('Sheared')->payload;
             }
         },
     trigger => sub {
             my ($self, $new_val, $old_val) = @_;
-            if (my $entity_data = $self->entity_nbt_data) {
+            if (my $entity_data = $self->nbt_data) {
 	            $entity_data->get_child_by_name('Sheared')->payload($new_val);
             }
         },
@@ -116,13 +116,13 @@ has 'size' => ( # size of slime
     isa => 'Maybe[Int]',
     default => sub {
             my $self = shift;
-            if (my $entity_data = $self->entity_nbt_data) {
+            if (my $entity_data = $self->nbt_data) {
                 return $entity_data->get_child_by_name('Size')->payload;
             }
         },
     trigger => sub {
             my ($self, $new_val, $old_val) = @_;
-            if (my $entity_data = $self->entity_nbt_data) {
+            if (my $entity_data = $self->nbt_data) {
 	            $entity_data->get_child_by_name('Size')->payload($new_val);
             }
         },

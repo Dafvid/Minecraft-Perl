@@ -1,11 +1,7 @@
 package Minecraft::InventoryItem;
 
 use Mouse;
-
-has 'nbt_data' => (
-    is => 'rw',
-    isa => 'Minecraft::NBT::Compound',
-);
+extends 'Minecraft::NBTClass';
 
 has 'id' => (
     is => 'rw',
@@ -81,6 +77,51 @@ has 'slot' => (
 	            $data->get_child_by_name('Slot')->payload($new_val);
             }
         },
+);
+
+has 'ench' => (
+    is => 'rw',
+    isa => 'Maybe[ArrayRef[HashRef]]',
+    default => sub {
+            my $self = shift;
+			if(my $tag = $self->nbt_data->get_child_by_name('tag')){
+				if($tag->get_child_by_name('ench')){
+					my @result = ();
+					foreach my $ench_nbt (@{$tag->get_child_by_name('ench')->payload}){
+						my $enchHash = {};
+						if(my $item_nbt = $ench_nbt->get_child_by_name('id')){
+							$enchHash->{'id'} = $item_nbt->payload;
+						}
+						if(my $item_nbt = $ench_nbt->get_child_by_name('lvl')){
+							$enchHash->{'lvl'} = $item_nbt->payload;
+						}
+						push @result, $enchHash;						
+					}
+					return \@result;
+				}
+			}
+			return undef;
+        },
+    trigger => sub {
+            # FIXME: create NBT item if it doesn't already exist
+            my ($self, $new_val, $old_val) = @_;
+            if (my $data = $self->nbt_data) {
+	            $data->get_child_by_name('Slot')->payload($new_val);
+            }
+        },
+);
+
+has 'hasEnchant' => (
+    is => 'ro',
+    isa => 'Bool',
+    default => sub {
+            my $self = shift;
+            if (my $tag = $self->nbt_data->get_child_by_name('tag')) {
+                return 1 if $tag->get_child_by_name('ench');
+            }
+			return undef;
+        },
+    lazy => 1,
 );
 
 #TODO Remove this? Why is this needed?

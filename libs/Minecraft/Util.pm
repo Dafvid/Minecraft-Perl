@@ -576,6 +576,41 @@ Readonly my $PROFESSIONS => [
 	'Villager',
 ];
 
+Readonly my $ENCHANTS => {
+	0 => 'Protection',
+	1 => 'Fire Protection',
+	2 => 'Feather Falling',
+	3 => 'Blast Protection',
+	4 => 'Projectile Protection',
+	5 => 'Respiration',
+	6 => 'Aqua Affinity',
+	
+	16 => 'Sharpness',
+	17 => 'Smite',
+	18 => 'Band of Arthropods',
+	19 => 'Knockback',
+	20 => 'Fire Aspect',
+	21 => 'Looting',
+	
+	32 => 'Efficiency',
+	33 => 'Silk Touch',
+	34 => 'Unbreaking',
+	35 => 'Fortune',
+	
+	48 => 'Power',
+	49 => 'Punch',
+	50 => 'Flame',
+	51 => 'Infinity',
+};
+
+Readonly my $ENCHANT_LEVELS => {
+	1 => 'I',
+	2 => 'II',
+	3 => 'III',
+	4 => 'IV',
+	5 => 'V',
+};
+
 # FIXME: need some way to denote damage is used for wool color
 
 sub item_has_damage {
@@ -623,6 +658,18 @@ sub get_profession {
     }
 	my $return = $PROFESSIONS->[$id];
 	if(!$return){$return="unknown profession($id)";}
+    return $return;
+}
+
+sub get_enchant {
+    my $id = shift;
+    if ($id eq __PACKAGE__) {
+        $id = shift;
+    }
+	my $lvl = shift;
+	my $return = $ENCHANTS->{$id};
+	$return .= " ".$ENCHANT_LEVELS->{$lvl} if $lvl;
+	if(!$return){$return="unknown enchant($id)";}
     return $return;
 }
 
