@@ -91,7 +91,10 @@ has 'spawnX' => (
     isa => 'Int',
     default => sub { 
             my $self = shift;
-            return $self->nbt_data->get_child_by_name('SpawnX')->payload;
+			if (my $data = $self->nbt_data->get_child_by_name('SpawnX')){
+				return $data->payload;
+			}
+			return 0;
         },
 	lazy => 1,
 );
@@ -101,7 +104,10 @@ has 'spawnY' => (
     isa => 'Int',
     default => sub { 
             my $self = shift;
-            return $self->nbt_data->get_child_by_name('SpawnY')->payload;
+            if (my $data = $self->nbt_data->get_child_by_name('SpawnY')){
+				return $data->payload;
+			}
+			return 0;
         },
 	lazy => 1,
 );
@@ -112,7 +118,10 @@ has 'spawnZ' => (
     isa => 'Int',
     default => sub { 
             my $self = shift;
-            return $self->nbt_data->get_child_by_name('SpawnZ')->payload;
+            if (my $data = $self->nbt_data->get_child_by_name('SpawnZ')){
+				return $data->payload;
+			}
+			return 0;
         },
 	lazy => 1,
 );

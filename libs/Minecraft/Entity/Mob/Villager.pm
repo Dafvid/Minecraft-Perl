@@ -63,7 +63,6 @@ has 'offers' => (
 							$offerHash->{'sell'} = Minecraft::InventoryItem->new({nbt_data => $item_nbt});
 						}
 						if(my $item_nbt = $offer_nbt->get_child_by_name('uses')){
-							# print $item_nbt->as_string;
 							$offerHash->{'uses'} = $item_nbt->payload;
 						}
 						if(my $item_nbt = $offer_nbt->get_child_by_name('maxUses')){
